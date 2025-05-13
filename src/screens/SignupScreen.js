@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
-import { Text, StyleSheet } from 'react-native';
-import { Formik } from 'formik';
-import auth from '@react-native-firebase/auth';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scrollview';
-import { View, TextInput, Logo, Button, FormErrorMessage } from '../components';
-import { Images, Colors } from '../config';
-import { useTogglePasswordVisibility } from '../hooks';
-import { signupValidationSchema } from '../utils';
+import React, {useState} from 'react';
+import {Text, StyleSheet} from 'react-native';
+import {Formik} from 'formik';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+} from '@react-native-firebase/auth';
+import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scrollview';
+import {View, TextInput, Logo, Button, FormErrorMessage} from '../components';
+import {Images, Colors} from '../config';
+import {useTogglePasswordVisibility} from '../hooks';
+import {signupValidationSchema} from '../utils';
 
-
-export const SignupScreen = ({ navigation }) => {
+export const SignupScreen = ({navigation}) => {
   const [errorState, setErrorState] = useState('');
   const {
     passwordVisibility,
@@ -17,19 +19,16 @@ export const SignupScreen = ({ navigation }) => {
     rightIcon,
     handleConfirmPasswordVisibility,
     confirmPasswordIcon,
-    confirmPasswordVisibility
+    confirmPasswordVisibility,
   } = useTogglePasswordVisibility();
 
   const handleSignup = async values => {
-    const { email, password } = values;
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .catch(error =>
-        setErrorState(error.message)
-      );
+    const {email, password} = values;
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password).catch(error =>
+      setErrorState(error.message),
+    );
   };
-
-
 
   return (
     <View isSafe style={styles.container}>
@@ -44,28 +43,27 @@ export const SignupScreen = ({ navigation }) => {
           initialValues={{
             email: '',
             password: '',
-            confirmPassword: ''
+            confirmPassword: '',
           }}
           validationSchema={signupValidationSchema}
-          onSubmit={values => handleSignup(values)}
-        >
+          onSubmit={values => handleSignup(values)}>
           {({
             values,
             touched,
             errors,
             handleChange,
             handleSubmit,
-            handleBlur
+            handleBlur,
           }) => (
             <>
               {/* Input fields */}
               <TextInput
-                name='email'
-                leftIconName='email'
-                placeholder='Enter email'
-                autoCapitalize='none'
-                keyboardType='email-address'
-                textContentType='emailAddress'
+                name="email"
+                leftIconName="email"
+                placeholder="Enter email"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
                 autoFocus={true}
                 value={values.email}
                 onChangeText={handleChange('email')}
@@ -73,13 +71,13 @@ export const SignupScreen = ({ navigation }) => {
               />
               <FormErrorMessage error={errors.email} visible={touched.email} />
               <TextInput
-                name='password'
-                leftIconName='key-variant'
-                placeholder='Enter password'
-                autoCapitalize='none'
+                name="password"
+                leftIconName="key-variant"
+                placeholder="Enter password"
+                autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={passwordVisibility}
-                textContentType='newPassword'
+                textContentType="newPassword"
                 rightIcon={rightIcon}
                 handlePasswordVisibility={handlePasswordVisibility}
                 value={values.password}
@@ -91,13 +89,13 @@ export const SignupScreen = ({ navigation }) => {
                 visible={touched.password}
               />
               <TextInput
-                name='confirmPassword'
-                leftIconName='key-variant'
-                placeholder='Enter password'
-                autoCapitalize='none'
+                name="confirmPassword"
+                leftIconName="key-variant"
+                placeholder="Enter password"
+                autoCapitalize="none"
                 autoCorrect={false}
                 secureTextEntry={confirmPasswordVisibility}
-                textContentType='password'
+                textContentType="password"
                 rightIcon={confirmPasswordIcon}
                 handlePasswordVisibility={handleConfirmPasswordVisibility}
                 value={values.confirmPassword}
@@ -135,16 +133,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: Colors.white,
-    paddingHorizontal: 12
+    paddingHorizontal: 12,
   },
   logoContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   },
   screenTitle: {
     fontSize: 32,
     fontWeight: '700',
     color: Colors.black,
-    paddingTop: 20
+    paddingTop: 20,
   },
   button: {
     width: '100%',
@@ -153,16 +151,16 @@ const styles = StyleSheet.create({
     marginTop: 8,
     backgroundColor: Colors.orange,
     padding: 10,
-    borderRadius: 8
+    borderRadius: 8,
   },
   buttonText: {
     fontSize: 20,
     color: Colors.white,
-    fontWeight: '700'
+    fontWeight: '700',
   },
   borderlessButtonContainer: {
     marginTop: 16,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
