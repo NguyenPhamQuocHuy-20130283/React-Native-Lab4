@@ -10,6 +10,7 @@ import {View, TextInput, Logo, Button, FormErrorMessage} from '../components';
 import {Images, Colors} from '../config';
 import {useTogglePasswordVisibility} from '../hooks';
 import {loginValidationSchema} from '../utils';
+import {googleSignIn} from '../providers/authService';
 
 export const LoginScreen = ({navigation}) => {
   const [errorState, setErrorState] = useState('');
@@ -26,6 +27,7 @@ export const LoginScreen = ({navigation}) => {
 
   const handleGoogleLogin = async () => {
     try {
+      console.log('Login button clicked');
       const user = await googleSignIn();
       Alert.alert('Đăng nhập thành công', `Chào ${user.displayName}`);
     } catch (err) {
